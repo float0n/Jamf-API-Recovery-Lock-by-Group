@@ -23,7 +23,7 @@
 # - Thank you to @dan-snelson for the Setup Your Mac Project which provided the install logic for swiftDialog and the logging for the script
 # June 25th 2024: Replaced the depracted token endpoints, now just using the one
 # - added support for API Roles and Clients Permissions Needed include: Read Computers, Read Smart Computer Groups,
-# Read Static Computer Groups, and Send Set Recovery Lock Command
+# Read Static Computer Groups, Send Set Recovery Lock Command, and View MDM command information in Jamf Pro API
 # 
 #
 # 
@@ -457,7 +457,7 @@ function magic {
 				if [[ -z $check ]]; then
 					((success++))
 				else
-					failedsn+=($(curl -s $url/JSSResource/computer/id/$id -X GET -H "accept: application/xml" -H "Authorization: Bearer $token | xmllint --xpath '/computer/general/serial_number/text()" -))
+					failedsn+=($(curl -s $url/JSSResource/computers/id/$id -X GET -H "accept: application/xml" -H "Authorization: Bearer $token" | xmllint --xpath '/computer/general/serial_number/text()' -))
 					updateScriptLog "FAILURE: ${failedsn[$fail]} failed to send command"
 					((fail++))
 				fi
@@ -515,4 +515,4 @@ start
 premagic
 magic 
 finallog 
-cleanup 
+cleanup
